@@ -1,0 +1,17 @@
+{
+  "platforms": [
+    "apple",
+    "android",
+    "web"
+  ],
+  "apple": {
+    "modules": [
+      "ExpoInappUpdateModule"
+    ]
+  },
+  "android": {
+    "modules": [
+      "expo.modules.inappupdate.ExpoInappUpdateModule"
+    ]
+  }
+}
