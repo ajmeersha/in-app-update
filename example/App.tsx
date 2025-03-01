@@ -1,38 +1,64 @@
-import { useEvent } from 'expo';
-import ExpoInappUpdate, { ExpoInappUpdateView } from 'expo-inapp-update';
-import { Button, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { useEvent } from "expo";
+import * as ExpoInappUpdate from "expo-inapp-update";
+import { useEffect, useState } from "react";
+import { Button, SafeAreaView, ScrollView, Text, View } from "react-native";
 
 export default function App() {
-  const onChangePayload = useEvent(ExpoInappUpdate, 'onChange');
+  // const onChangePayload = useEvent(ExpoInappUpdate, 'onChange');
 
+  const [theme, setTheme] = useState<string>(ExpoInappUpdate.getTheme());
+
+  useEffect(() => {
+    const subscription = ExpoInappUpdate.addThemeChangeListener(
+      ({ theme: newTheme }) => {
+        setTheme(newTheme);
+      }
+    );
+
+    return () => subscription.remove();
+  }, [setTheme]);
+
+  const handleUpdateAvailable = async () => {
+    const isUpdateAvailable = await ExpoInappUpdate.chechUpdateAvailable();
+    console.log(isUpdateAvailable);
+  };
+
+  // Toggle between dark and light theme
+  const nextTheme = theme === "dark" ? "light" : "dark";
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container}>
         <Text style={styles.header}>Module API Example</Text>
-        <Group name="Constants">
+        {/* <Group name="Constants">
           <Text>{ExpoInappUpdate.PI}</Text>
-        </Group>
+        </Group> */}
         <Group name="Functions">
-          <Text>{ExpoInappUpdate.hello()}</Text>
+          <Text>{ExpoInappUpdate.getTheme()}</Text>
+
+          <Button
+            title={`Set theme to ${nextTheme}`}
+            // onPress={() => ExpoInappUpdate.setTheme(nextTheme)}
+            onPress={() => handleUpdateAvailable()}
+          />
         </Group>
-        <Group name="Async functions">
+        {/* <Group name="Async functions">
           <Button
             title="Set value"
             onPress={async () => {
-              await ExpoInappUpdate.setValueAsync('Hello from JS!');
+              await ExpoInappUpdate.setValueAsync("Hello from JS!");
             }}
           />
-        </Group>
-        <Group name="Events">
+        </Group> */}
+        {/* <Group name="Events">
           <Text>{onChangePayload?.value}</Text>
-        </Group>
-        <Group name="Views">
+        </Group> */}
+        {/* <Group name="Views">
           <ExpoInappUpdateView
             url="https://www.example.com"
             onLoad={({ nativeEvent: { url } }) => console.log(`Loaded: ${url}`)}
             style={styles.view}
           />
-        </Group>
+        </Group> */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -58,13 +84,13 @@ const styles = {
   },
   group: {
     margin: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 10,
     padding: 20,
   },
   container: {
     flex: 1,
-    backgroundColor: '#eee',
+    backgroundColor: "#eee",
   },
   view: {
     flex: 1,

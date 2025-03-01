@@ -41,3 +41,8 @@ android {
     abortOnError false
   }
 }
+dependencies {
+    implementation project(':expo-modules-core')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.25"
+    implementation("com.google.android.play:app-update-ktx:2.1.0")
+}
