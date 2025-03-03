@@ -1,64 +1,47 @@
-import { useEvent } from "expo";
 import * as ExpoInappUpdate from "expo-inapp-update";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Button, SafeAreaView, ScrollView, Text, View } from "react-native";
 
 export default function App() {
   // const onChangePayload = useEvent(ExpoInappUpdate, 'onChange');
 
-  const [theme, setTheme] = useState<string>(ExpoInappUpdate.getTheme());
-
   useEffect(() => {
-    const subscription = ExpoInappUpdate.addThemeChangeListener(
-      ({ theme: newTheme }) => {
-        setTheme(newTheme);
+    const subscription = ExpoInappUpdate.immediateUpdateCancelled(
+      ({ resultCode }) => {
+        console.log(resultCode, "result");
+        // return resultCode.toString();
+      }
+    );
+    const Flexiblesubscription = ExpoInappUpdate.updateCancelled(
+      ({ resultCode }) => {
+        console.log(resultCode, "flexible result");
+        // return resultCode.toString();
       }
     );
 
-    return () => subscription.remove();
-  }, [setTheme]);
+    return () => {
+      Flexiblesubscription.remove();
+      subscription.remove();
+    };
+  }, []);
 
   const handleUpdateAvailable = async () => {
-    const isUpdateAvailable = await ExpoInappUpdate.chechUpdateAvailable();
-    console.log(isUpdateAvailable);
+    const isUpdateAvailable = await ExpoInappUpdate.isUpdateAvailable();
+    console.log(isUpdateAvailable, "isupdate");
   };
 
   // Toggle between dark and light theme
-  const nextTheme = theme === "dark" ? "light" : "dark";
+  // const nextTheme = theme === "dark" ? "light" : "dark";
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container}>
         <Text style={styles.header}>Module API Example</Text>
-        {/* <Group name="Constants">
-          <Text>{ExpoInappUpdate.PI}</Text>
-        </Group> */}
         <Group name="Functions">
-          <Text>{ExpoInappUpdate.getTheme()}</Text>
-
           <Button
-            title={`Set theme to ${nextTheme}`}
-            // onPress={() => ExpoInappUpdate.setTheme(nextTheme)}
+            title={`Set theme to`}
             onPress={() => handleUpdateAvailable()}
           />
         </Group>
-        {/* <Group name="Async functions">
-          <Button
-            title="Set value"
-            onPress={async () => {
-              await ExpoInappUpdate.setValueAsync("Hello from JS!");
-            }}
-          />
-        </Group> */}
-        {/* <Group name="Events">
-          <Text>{onChangePayload?.value}</Text>
-        </Group> */}
-        {/* <Group name="Views">
-          <ExpoInappUpdateView
-            url="https://www.example.com"
-            onLoad={({ nativeEvent: { url } }) => console.log(`Loaded: ${url}`)}
-            style={styles.view}
-          />
-        </Group> */}
       </ScrollView>
     </SafeAreaView>
   );
