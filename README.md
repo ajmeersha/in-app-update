@@ -4,16 +4,16 @@ android in-app update module for expo with handling cancel event
 
 ## Installation
 
-Use the package manager npm or yarn to install rn-truecaller
+Use the package manager npm or yarn to install expo-inapp-update
 
 ```bash
-npm install rn-truecaller
+npm install expo-inapp-update
 ```
 
 or
 
 ```bash
-yarn add rn-truecaller
+yarn add expo-inapp-update
 ```
 
 ## Usage
