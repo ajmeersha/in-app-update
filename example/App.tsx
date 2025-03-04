@@ -3,42 +3,39 @@ import { useEffect } from "react";
 import { Button, SafeAreaView, ScrollView, Text, View } from "react-native";
 
 export default function App() {
-  // const onChangePayload = useEvent(ExpoInappUpdate, 'onChange');
-
   useEffect(() => {
-    const subscription = ExpoInappUpdate.immediateUpdateCancelled(
-      ({ resultCode }) => {
+    const ImmediateUpdatesubscription =
+      ExpoInappUpdate.immediateUpdateCancelled(({ resultCode }) => {
+        // handle the immediate update cancel event or success event based on the result code
         console.log(resultCode, "result");
-        // return resultCode.toString();
-      }
-    );
+      });
     const Flexiblesubscription = ExpoInappUpdate.updateCancelled(
       ({ resultCode }) => {
+        // handle the flexible update cancel event or success event based on the result code
         console.log(resultCode, "flexible result");
-        // return resultCode.toString();
       }
     );
 
     return () => {
       Flexiblesubscription.remove();
-      subscription.remove();
+      ImmediateUpdatesubscription.remove();
     };
   }, []);
 
   const handleUpdateAvailable = async () => {
     const isUpdateAvailable = await ExpoInappUpdate.isUpdateAvailable();
+    if (isUpdateAvailable) {
+      ExpoInappUpdate.startUpdate();
+    }
     console.log(isUpdateAvailable, "isupdate");
   };
-
-  // Toggle between dark and light theme
-  // const nextTheme = theme === "dark" ? "light" : "dark";
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container}>
-        <Text style={styles.header}>Module API Example</Text>
+        <Text style={styles.header}>Inapp update API Example</Text>
         <Group name="Functions">
           <Button
-            title={`Set theme to`}
+            title="Check update from google play console"
             onPress={() => handleUpdateAvailable()}
           />
         </Group>
