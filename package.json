@@ -1,6 +1,6 @@
 {
   "name": "expo-inapp-update",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "android in-app update module for expo",
   "main": "build/index.js",
   "types": "build/index.d.ts",
